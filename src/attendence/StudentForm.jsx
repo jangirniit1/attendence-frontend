@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function StudentForm() {
+function StudentForm({ studentSaved, updateData }) {
   const [name, setName] = useState("");
   const [aadhaar, setAadhaar] = useState("");
   const [faculty, setFaculty] = useState("");
@@ -17,7 +17,7 @@ function StudentForm() {
       }
     };
     fetchFaculties();
-  }, []);  
+  }, [updateData]);  
 
   async function handleSubmit (e) {
     e.preventDefault();
@@ -27,8 +27,9 @@ function StudentForm() {
       if (response.status === 200) {
         console.log({Message:"Student Saved"});
         setName("");
-        setAadhaar("")
-        
+        setAadhaar("");
+        setMessage("Student Saved Successfully");
+        studentSaved();
       } else {
         console.log("failed");
       }

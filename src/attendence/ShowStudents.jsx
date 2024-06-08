@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function ShowStudents() {
+function ShowStudents({ updateData }) {
   const [teachers, setTeachers] = useState([]);
   const [selectedFaculty, setSelectedFaculty] = useState("");
   const [students, setStudents] = useState([]);
-  const [attendance, setAttendance] = useState([]);
+  const [attendance, setAttendance] = useState({});
 
   async function fetchFaculties() {
     try {
@@ -43,7 +43,7 @@ function ShowStudents() {
 
   useEffect(() => {
     fetchFaculties();
-  }, []);
+  }, [updateData]);
 
   useEffect(() => {
     if (selectedFaculty) {
@@ -58,9 +58,41 @@ function ShowStudents() {
     }));
   }
 
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    const studentData = students.map(student => ({
+      studentId: student._id,
+      studentName: student.name,
+      attendance: attendance[student._id]
+    }));
+
+    const dataToSend = {
+      date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
+      faculty: selectedFaculty,
+      name: studentData.map(s => s.studentName).join(", "),
+      attendance: studentData.reduce((acc, cur) => {
+        acc[cur.studentId] = cur.attendance;
+        return acc;
+      }, {})
+    };
+
+    try {
+      const response = await axios.post("http://localhost:3000/saveAttendance", dataToSend);
+      if (response.status === 200) {
+        console.log("Attendance saved successfully");
+      } else {
+        console.log("Failed to save attendance");
+      }
+    } catch (error) {
+      console.log("Error saving attendance", error);
+    }
+  };
+
   return (
     <>
       <div className="wrapper mx-auto bg-white rounded-lg max-w-lg p-6">
+        <form action="" onSubmit={handleSubmit}>
         <label
           className="block text-sm font-medium text-gray-700"
           htmlFor="faculty"
@@ -111,8 +143,10 @@ function ShowStudents() {
               ))}
             </ul>
             <button className="bg-green-600 text-white mt-4  flex justify-center m-auto items-center py-2 px-4 text-sm font-medium rounded-md" type="submit">Submit</button>
+            
           </div>
         )}
+        </form>
       </div>
     </>
   );

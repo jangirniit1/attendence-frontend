@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function Faculty() {
+function Faculty({ facultySaved }) {
   const [name, setName] = useState("");
  
   async function handleSubmit(e) {
@@ -13,6 +13,8 @@ function Faculty() {
        
         console.log({Message:"Faculty Saved"});
         setName("");
+        setMessage("Faculty Saved Successfully");
+        facultySaved();
       } else {
         console.log("failed");
       }

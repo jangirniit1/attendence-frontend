@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import StudentForm from "./StudentForm.jsx";
 import Faculty from "./Faculty.jsx";
 import FacultyList from "./FacultyList.jsx";
@@ -7,12 +7,17 @@ import "../index.css";
 import "./attendance.css";
 
 function Main() {
+  const [updateData, setUpdateData] = useState(false);
+
+  const handleUpdate = () => {
+    setUpdateData(!updateData);
+  };
   return (
     <>
-      <StudentForm />
-      <Faculty />
-      <FacultyList />
-      <ShowStudents />
+      <StudentForm studentSaved={handleUpdate} updateData={updateData} />
+      <Faculty facultySaved={handleUpdate} />
+      <FacultyList updateData={updateData} facultyUpdated={handleUpdate} />
+      <ShowStudents updateData={updateData} />
     </>
   );
 }

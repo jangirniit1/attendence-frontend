@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function FacultyList() {
+function FacultyList({ updateData, facultyUpdated }) {
   const [faculties, setFaculties] = useState([]);
 
   async function fetchFaculties() {
@@ -18,7 +18,7 @@ function FacultyList() {
   }
   useEffect(() => {
     fetchFaculties();
-  }, []);
+  }, [updateData]);
 
   async function handleDelete(id) {
     try {
@@ -28,6 +28,7 @@ function FacultyList() {
       //   console.log(response);
       if (response.data === "Faculty Deleted") {
         console.log({ Message: "Faculty deleted" });
+        facultyUpdated();
       } else {
         console.log("failed");
       }
