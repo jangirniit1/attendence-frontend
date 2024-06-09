@@ -13,10 +13,10 @@ function ShowStudents({ updateData }) {
       if (response.status === 200) {
         setTeachers(response.data);
       } else {
-        console.log("failed");
+        console.log("Failed to fetch faculties");
       }
     } catch (error) {
-      console.error("error");
+      console.error("Error fetching faculties", error);
     }
   }
 
@@ -28,16 +28,16 @@ function ShowStudents({ updateData }) {
       if (response.status === 200) {
         setStudents(response.data);
         
-        const initialAttendance = [];
+        const initialAttendance = {};
         response.data.forEach((student) => {
-          initialAttendance[student._id] = "A";
+          initialAttendance[student.name] = "A";
         });
         setAttendance(initialAttendance);
       } else {
-        console.log("failed");
+        console.log("Failed to fetch students");
       }
     } catch (error) {
-      console.error("error");
+      console.error("Error fetching students", error);
     }
   }
 
@@ -51,10 +51,10 @@ function ShowStudents({ updateData }) {
     }
   }, [selectedFaculty]);
 
-  function toggleAttendance(studentId) {
+  function toggleAttendance(studentName) {
     setAttendance((prevAttendance) => ({
       ...prevAttendance,
-      [studentId]: prevAttendance[studentId] === "A" ? "P" : "A",
+      [studentName]: prevAttendance[studentName] === "A" ? "P" : "A",
     }));
   }
 
@@ -64,17 +64,13 @@ function ShowStudents({ updateData }) {
     const studentData = students.map(student => ({
       studentId: student._id,
       studentName: student.name,
-      attendance: attendance[student._id]
+      status: attendance[student.name]
     }));
 
     const dataToSend = {
       date: new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }),
       faculty: selectedFaculty,
-      name: studentData.map(s => s.studentName).join(", "),
-      attendance: studentData.reduce((acc, cur) => {
-        acc[cur.studentId] = cur.attendance;
-        return acc;
-      }, {})
+      attendance: studentData
     };
 
     try {
@@ -110,7 +106,7 @@ function ShowStudents({ updateData }) {
             Select faculty
           </option>
           {teachers.map((teacher) => (
-            <option key={teacher._id} value={teacher.name}>
+            <option key={teacher.name} value={teacher.name}>
               {teacher.name}
             </option>
           ))}
@@ -121,7 +117,7 @@ function ShowStudents({ updateData }) {
             <ul>
               {students.map((student) => (
                 <li
-                  key={student._id}
+                  key={student.name}
                   className="border border-rounded flex justify-between "
                 >
                   <span className="ml-3">{student.name}</span>
@@ -129,21 +125,20 @@ function ShowStudents({ updateData }) {
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
-                      toggleAttendance(student._id);
+                      toggleAttendance(student.name);
                     }}
                     className={`text-center text-white px-3 mr-5 rounded-md ${
-                      attendance[student._id] === "P"
+                      attendance[student.name] === "P"
                         ? "bg-green-500"
                         : "bg-red-500"
                     }`}
                   >
-                    {attendance[student._id]}
+                    {attendance[student.name]}
                   </a>
                 </li>
               ))}
             </ul>
             <button className="bg-green-600 text-white mt-4  flex justify-center m-auto items-center py-2 px-4 text-sm font-medium rounded-md" type="submit">Submit</button>
-            
           </div>
         )}
         </form>
@@ -153,3 +148,4 @@ function ShowStudents({ updateData }) {
 }
 
 export default ShowStudents;
+
