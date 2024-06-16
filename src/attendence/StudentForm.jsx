@@ -93,7 +93,7 @@ function StudentForm({ studentSaved, updateData }) {
           onClick={handleAddStudent}
           className="bg-green-600 text-white mt-4 flex justify-center m-auto items-center py-2 px-4 text-sm font-medium rounded-md"
         >
-          Add Student
+          Add Students
         </button>
         <label
           className="block text-sm font-medium text-gray-700"
