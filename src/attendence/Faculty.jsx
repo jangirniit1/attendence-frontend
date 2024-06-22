@@ -6,9 +6,9 @@ function Faculty({ facultySaved }) {
   const [faculties, setFaculties] = useState([{ name: "" }]);
   const [message, setMessage] = useState("");
 
-  const handleInputChange = (index, event) => {
+  const handleInputChange = (index, e) => {
     const newFaculties = [...faculties];
-    newFaculties[index].name = event.target.value;
+    newFaculties[index].name = e.target.value;
     setFaculties(newFaculties);
   };
 

@@ -3,6 +3,8 @@ import axios from "axios";
 
 function FacultyList({ updateData, facultyUpdated }) {
   const [faculties, setFaculties] = useState([]);
+  const [selectedFacultyIds, setSelectedFacultyIds] = useState([]);
+  const [message, setMessage] = useState("");
 
   async function fetchFaculties() {
     try {
